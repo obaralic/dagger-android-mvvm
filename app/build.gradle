@@ -25,6 +25,20 @@ android {
     }
 }
 
+ext {
+    lifecycle_version = '1.1.1'
+    room_version = '1.1.1'
+    dagger_version = '2.22.1'
+    retrofit_version = '2.5.0'
+    timber_version = '4.7.1'
+    glide_version = '4.9.0'
+    rxkotlin_version = '2.3.0'
+    rxjava_version = '2.2.8'
+    rxandroid_version = '2.1.1'
+    rxbinding_version = '3.0.0-alpha2'
+    rxcalladapter_version = '2.5.0'
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -45,11 +59,28 @@ dependencies {
     kapt "android.arch.persistence.room:compiler:$room_version"
     androidTestImplementation "android.arch.persistence.room:testing:$room_version"
 
-    // Dagger 2 - Android dependency
+    // Dagger 2 - Core and Android
+    implementation "com.google.dagger:dagger:$dagger_version"
     implementation "com.google.dagger:dagger-android:$dagger_version"
     implementation "com.google.dagger:dagger-android-support:$dagger_version"
     kapt "com.google.dagger:dagger-android-processor:$dagger_version"
-
-    // Dagger 2 - Default dependency
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
+
+    // Retrofit
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+
+    // Glide
+    implementation "com.github.bumptech.glide:glide:$glide_version"
+    kapt "com.github.bumptech.glide:compiler:$glide_version"
+
+    // Timber Log
+    implementation "com.jakewharton.timber:timber:$timber_version"
+
+    // ReactiveX
+    implementation "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
+    implementation "io.reactivex.rxjava2:rxjava:$rxjava_version"
+    implementation "io.reactivex.rxjava2:rxkotlin:$rxkotlin_version"
+    implementation "com.jakewharton.rxbinding3:rxbinding:$rxbinding_version"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$rxcalladapter_version"
 }
