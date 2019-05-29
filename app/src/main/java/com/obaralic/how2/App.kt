@@ -16,7 +16,7 @@
 package com.obaralic.how2
 
 import com.obaralic.how2.di.component.DaggerAppComponent
-import com.obaralic.how2.util.log.CrashReportingTree
+import com.obaralic.how2.util.CrashReportingTree
 import dagger.android.AndroidInjector
 import dagger.android.support.DaggerApplication
 import timber.log.Timber

@@ -16,10 +16,9 @@
 package com.obaralic.how2.di.component
 
 import com.obaralic.how2.App
-import com.obaralic.how2.di.module.ActivityModule
+import com.obaralic.how2.di.module.ActivityBuilderModule
 import com.obaralic.how2.di.module.AppModule
-import com.obaralic.how2.di.module.FragmentModule
-import com.obaralic.how2.di.module.ViewModelModule
+import com.obaralic.how2.di.module.ViewModelFactoryModule
 import dagger.Component
 import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
@@ -29,10 +28,9 @@ import javax.inject.Singleton
 @Component(
     modules = [
         AndroidSupportInjectionModule::class,
-        AppModule::class,
-        ActivityModule::class,
-        FragmentModule::class,
-        ViewModelModule::class
+        ActivityBuilderModule::class,
+        ViewModelFactoryModule::class,
+        AppModule::class
     ]
 )
 interface AppComponent : AndroidInjector<App> {

@@ -16,12 +16,21 @@
 package com.obaralic.how2.di.module
 
 import android.content.Context
+import android.graphics.drawable.Drawable
+import androidx.core.content.ContextCompat
 import androidx.room.Room
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
+import com.bumptech.glide.request.RequestOptions
 import com.obaralic.how2.App
+import com.obaralic.how2.R
 import com.obaralic.how2.model.database.AppDatabase
+import com.obaralic.how2.util.Constants
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module(includes = [AppModule.BindsModule::class])
@@ -30,18 +39,42 @@ class AppModule {
     @Module
     interface BindsModule {
 
-        @Binds
         @Singleton
+        @Binds
         fun bindContext(app: App): Context
 
     }
 
-    @Provides
     @Singleton
+    @Provides
+    fun provideRetrofit(): Retrofit = Retrofit.Builder()
+        .baseUrl(Constants.BASE_URL)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
+    @Singleton
+    @Provides
+    fun provideRequestOptions(): RequestOptions = RequestOptions
+        .placeholderOf(android.R.drawable.picture_frame)
+        .error(android.R.drawable.picture_frame)
+
+    @Singleton
+    @Provides
+    fun provideGlide(app: App, options: RequestOptions): RequestManager = Glide
+        .with(app)
+        .setDefaultRequestOptions(options)
+
+    @Singleton
+    @Provides
+    fun provideDrawable(app: App): Drawable = ContextCompat
+        .getDrawable(app, R.drawable.ic_shade)!!
+
+    @Singleton
+    @Provides
     fun provideUserDao(database: AppDatabase) = database.userDao()
 
-    @Provides
     @Singleton
+    @Provides
     fun provideDatabase(app: App): AppDatabase {
         val database = Room
             .databaseBuilder(

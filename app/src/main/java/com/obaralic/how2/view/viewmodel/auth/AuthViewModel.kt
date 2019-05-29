@@ -13,27 +13,23 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+package com.obaralic.how2.view.viewmodel.auth
 
-package com.obaralic.how2.model
+import androidx.lifecycle.ViewModel
+import com.obaralic.how2.network.AuthApi
+import timber.log.Timber
+import javax.inject.Inject
 
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
 
+class AuthViewModel @Inject constructor(private val authApi: AuthApi) : ViewModel() {
 
-class User {
-    @SerializedName("id")
-    @Expose
-    var id: Int = 0
+    init {
+        Timber.d("View Model is working...")
+    }
 
-    @SerializedName("username")
-    @Expose
-    var username: String? = null
+    fun auth() {
+        Timber.d("Auth: $authApi")
+    }
 
-    @SerializedName("email")
-    @Expose
-    var email: String? = null
-
-    @SerializedName("website")
-    @Expose
-    var website: String? = null
 }
+

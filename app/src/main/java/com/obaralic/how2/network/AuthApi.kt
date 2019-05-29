@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package com.obaralic.how2.network.auth
+package com.obaralic.how2.network
 
 import com.obaralic.how2.model.User
 import io.reactivex.Flowable

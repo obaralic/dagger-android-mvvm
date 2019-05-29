@@ -14,26 +14,21 @@
  *  limitations under the License.
  */
 
-package com.obaralic.how2.model
+package com.obaralic.how2.di.module.auth
 
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+import androidx.lifecycle.ViewModel
+import com.obaralic.how2.di.annotation.ViewModelKey
+import com.obaralic.how2.view.viewmodel.auth.AuthViewModel
+import dagger.Binds
+import dagger.Module
+import dagger.multibindings.IntoMap
 
 
-class User {
-    @SerializedName("id")
-    @Expose
-    var id: Int = 0
+@Module
+abstract class AuthViewModelModule {
 
-    @SerializedName("username")
-    @Expose
-    var username: String? = null
-
-    @SerializedName("email")
-    @Expose
-    var email: String? = null
-
-    @SerializedName("website")
-    @Expose
-    var website: String? = null
+    @Binds
+    @IntoMap
+    @ViewModelKey(AuthViewModel::class)
+    abstract fun  bindAuthViewModel(viewModel: AuthViewModel): ViewModel
 }

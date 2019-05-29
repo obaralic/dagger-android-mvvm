@@ -1,4 +1,4 @@
-/*
+/**
  *  All rights reserved.
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,4 +14,26 @@
  *  limitations under the License.
  */
 
-package com.obaralic.how2.network
+package com.obaralic.how2.util
+
+import android.util.Log
+import timber.log.Timber
+
+internal class CrashReportingTree : Timber.Tree() {
+
+    override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
+        if (priority == Log.VERBOSE || priority == Log.DEBUG) return
+
+//       Crashlytics.log(priority, tag, message)
+
+        if (t != null) {
+            if (priority == Log.ERROR) {
+//                Crashlytics.logException(t)
+
+            } else if (priority == Log.WARN) {
+//                Crashlytics.logException(t)
+            }
+        }
+    }
+
+}

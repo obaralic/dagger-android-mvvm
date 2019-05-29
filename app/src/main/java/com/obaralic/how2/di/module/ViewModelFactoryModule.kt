@@ -15,23 +15,14 @@
  */
 package com.obaralic.how2.di.module
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.obaralic.how2.di.annotation.ViewModelKey
-import com.obaralic.how2.viewmodel.MainViewModel
-import com.obaralic.how2.viewmodel.factory.ViewModelFactory
+import com.obaralic.how2.view.viewmodel.JViewModelFactory
 import dagger.Binds
 import dagger.Module
-import dagger.multibindings.IntoMap
 
 @Module
-abstract class ViewModelModule {
+abstract class ViewModelFactoryModule {
 
     @Binds
-    abstract fun bindViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(MainViewModel::class)
-    abstract fun bindMainViewModel(viewModel: MainViewModel): ViewModel
+    abstract fun bindViewModelFactory(factory: JViewModelFactory): ViewModelProvider.Factory
 }

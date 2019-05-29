@@ -16,14 +16,21 @@
 package com.obaralic.how2.di.module
 
 import com.obaralic.how2.di.annotation.ActivityScope
-import com.obaralic.how2.view.activity.MainActivity
+import com.obaralic.how2.di.module.auth.AuthModule
+import com.obaralic.how2.di.module.auth.AuthViewModelModule
+import com.obaralic.how2.view.auth.AuthActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
 @Module
-abstract class ActivityModule {
+abstract class ActivityBuilderModule {
 
     @ActivityScope
-    @ContributesAndroidInjector(modules = [FragmentModule::class])
-    abstract fun contributeMainActivity(): MainActivity
+    @ContributesAndroidInjector(
+        modules = [
+            AuthViewModelModule::class,
+            AuthModule::class
+        ]
+    )
+    internal abstract fun contributeAuthActivity(): AuthActivity
 }
