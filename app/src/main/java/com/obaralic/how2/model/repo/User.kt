@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.obaralic.how2.model
+package com.obaralic.how2.model.repo
 
-import javax.inject.Inject
-
-class Repository @Inject constructor(val source: LocalSource) {
-
-    fun load() = source.load()
-}
+data class User(val name: String, val username: String)

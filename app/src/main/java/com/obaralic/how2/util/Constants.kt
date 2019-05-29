@@ -1,4 +1,4 @@
-/*
+/**
  *  All rights reserved.
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,26 +14,9 @@
  *  limitations under the License.
  */
 
-package com.obaralic.how2.model
+package com.obaralic.how2.util
 
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+object Constants {
 
-
-class User {
-    @SerializedName("id")
-    @Expose
-    var id: Int = 0
-
-    @SerializedName("username")
-    @Expose
-    var username: String? = null
-
-    @SerializedName("email")
-    @Expose
-    var email: String? = null
-
-    @SerializedName("website")
-    @Expose
-    var website: String? = null
+    const val BASE_URL = "https://jsonplaceholder.typicode.com"
 }

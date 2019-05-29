@@ -1,4 +1,4 @@
-/*
+/**
  *  All rights reserved.
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,26 +14,15 @@
  *  limitations under the License.
  */
 
-package com.obaralic.how2.model
+package com.obaralic.how2.network.auth
 
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+import com.obaralic.how2.model.User
+import io.reactivex.Flowable
+import retrofit2.http.GET
+import retrofit2.http.Path
 
+interface AuthApi {
 
-class User {
-    @SerializedName("id")
-    @Expose
-    var id: Int = 0
-
-    @SerializedName("username")
-    @Expose
-    var username: String? = null
-
-    @SerializedName("email")
-    @Expose
-    var email: String? = null
-
-    @SerializedName("website")
-    @Expose
-    var website: String? = null
+    @GET("users/{id}")
+    fun getUser( @Path("id") id: Int): Flowable<User>
 }

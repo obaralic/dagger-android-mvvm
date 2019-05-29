@@ -18,8 +18,8 @@ package com.obaralic.how2.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.obaralic.how2.model.Repository
-import com.obaralic.how2.model.User
+import com.obaralic.how2.model.repo.Repository
+import com.obaralic.how2.model.repo.User
 import com.obaralic.how2.util.ioThread
 import javax.inject.Inject
 

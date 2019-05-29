@@ -25,7 +25,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.obaralic.how2.R
-import com.obaralic.how2.model.User
+import com.obaralic.how2.model.repo.User
 import com.obaralic.how2.viewmodel.MainViewModel
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.main_fragment.*
