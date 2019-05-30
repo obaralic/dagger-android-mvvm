@@ -17,6 +17,9 @@ package com.obaralic.how2.view.viewmodel.auth
 
 import androidx.lifecycle.ViewModel
 import com.obaralic.how2.network.AuthApi
+import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -27,9 +30,14 @@ class AuthViewModel @Inject constructor(private val authApi: AuthApi) : ViewMode
         Timber.d("View Model is working...")
     }
 
-    fun auth() {
-        Timber.d("Auth: $authApi")
-    }
+    fun auth(id: Int): Disposable =
+        authApi.getUser(id)
+            .toObservable()
+            .subscribeOn(Schedulers.io())
+            .subscribeBy(
+                onNext = { Timber.d("Auth success: $it") },
+                onError = { Timber.e(it) }
+            )
 
 }
 

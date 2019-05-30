@@ -58,6 +58,7 @@ internal class AuthActivity : BaseActivity() {
 
     override fun initBinding() {
         dataBinding = DataBindingUtil.setContentView(this, R.layout.auth_activity)
+        dataBinding.viewModel = authViewModel
     }
 
     override fun initViewModel() {
@@ -75,7 +76,11 @@ internal class AuthActivity : BaseActivity() {
             .subscribeOn(AndroidSchedulers.mainThread())
             .observeOn(Schedulers.newThread())
             .subscribeBy(
-                onNext = { Timber.d("Login...").let { authViewModel.auth() } },
+                onNext = {
+                    Timber.d("Login...").let {
+                        addDisposable(authViewModel.auth(Integer.parseInt(user_id_input.text.toString())))
+                    }
+                },
                 onError = { Timber.e(it)}
             )
         )

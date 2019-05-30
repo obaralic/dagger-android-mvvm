@@ -36,4 +36,6 @@ class User {
     @SerializedName("website")
     @Expose
     var website: String? = null
+
+    override fun toString() = "User[id:$id, username:$username, email:$email, website:$website]"
 }
