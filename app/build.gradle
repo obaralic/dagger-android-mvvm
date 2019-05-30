@@ -42,6 +42,7 @@ ext {
     rxandroid_version = '2.1.1'
     rxbinding_version = '2.0.0'
     rxcalladapter_version = '2.5.0'
+    rxstreams_version = '1.1.1'
 }
 
 dependencies {
@@ -91,4 +92,5 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxkotlin:$rxkotlin_version"
     implementation "com.jakewharton.rxbinding2:rxbinding:$rxbinding_version"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$rxcalladapter_version"
+    implementation "android.arch.lifecycle:reactivestreams:$rxstreams_version"
 }

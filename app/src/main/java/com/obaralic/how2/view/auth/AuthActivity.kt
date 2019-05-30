@@ -19,17 +19,18 @@ package com.obaralic.how2.view.auth
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.RequestManager
 import com.jakewharton.rxbinding2.view.RxView
 import com.obaralic.how2.R
 import com.obaralic.how2.databinding.AuthActivityBinding
+import com.obaralic.how2.model.User
 import com.obaralic.how2.view.BaseActivity
 import com.obaralic.how2.view.viewmodel.auth.AuthViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.auth_activity.*
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
@@ -70,20 +71,28 @@ internal class AuthActivity : BaseActivity() {
     }
 
     override fun initRx() {
+        subscribeObservers()
         addDisposable(RxView
             .clicks(login_button)
             .debounce(500, TimeUnit.MILLISECONDS)
-            .subscribeOn(AndroidSchedulers.mainThread())
-            .observeOn(Schedulers.newThread())
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy(
-                onNext = {
-                    Timber.d("Login...").let {
-                        addDisposable(authViewModel.auth(Integer.parseInt(user_id_input.text.toString())))
-                    }
-                },
-                onError = { Timber.e(it)}
+                onNext = { Timber.d("Login...").apply { attemptLogin() } },
+                onError = { Timber.e(it) }
             )
         )
+    }
+
+    private fun attemptLogin() {
+        if (user_id_input.text!!.isNotEmpty()) {
+            authViewModel.authenticate(Integer.parseInt(user_id_input.text.toString()))
+        }
+    }
+
+    private fun subscribeObservers() {
+        authViewModel.observeUser().observe(this, Observer<User> { user ->
+            user?.let { Timber.d(user.toString()) }
+        })
     }
 
 }
