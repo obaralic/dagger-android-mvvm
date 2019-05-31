@@ -24,6 +24,7 @@ import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.RequestOptions
 import com.obaralic.how2.App
 import com.obaralic.how2.R
+import com.obaralic.how2.SessionManager
 import com.obaralic.how2.model.database.AppDatabase
 import com.obaralic.how2.util.Constants
 import dagger.Binds
@@ -43,7 +44,12 @@ class AppModule {
         @Singleton
         @Binds
         fun bindContext(app: App): Context
+
     }
+
+    @Singleton
+    @Provides
+    fun provideSessionManager(): SessionManager = SessionManager()
 
     @Singleton
     @Provides

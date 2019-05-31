@@ -91,7 +91,7 @@ internal class AuthActivity : BaseActivity() {
     }
 
     private fun subscribeObservers() {
-        authViewModel.observeUser().observe(this, Observer<AuthResource<out User>> { authResource ->
+        authViewModel.observeAuthState().observe(this, Observer<AuthResource<out User>> { authResource ->
             authResource?.apply {
                 when (authResource.status) {
                     AuthResource.AuthStatus.LOADING -> {

@@ -19,6 +19,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.LiveDataReactiveStreams
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
+import com.obaralic.how2.SessionManager
 import com.obaralic.how2.model.User
 import com.obaralic.how2.network.AuthApi
 import com.obaralic.how2.view.auth.AuthResource
@@ -28,15 +29,18 @@ import timber.log.Timber
 import javax.inject.Inject
 
 
-class AuthViewModel @Inject constructor(private val authApi: AuthApi) : ViewModel() {
-
-    private val authUser: MediatorLiveData<AuthResource<out User>>
-            by lazy { MediatorLiveData<AuthResource<out User>>() }
+class AuthViewModel @Inject constructor(
+    private val authApi: AuthApi,
+    private val sessionManager: SessionManager
+) : ViewModel() {
 
     internal fun authenticate(userId: Int) {
-        authUser.value = AuthResource.loading(null)
+        Timber.d("authenticate attempt")
+        sessionManager.authenticate(queryUserId(userId))
+    }
 
-        val source = LiveDataReactiveStreams.fromPublisher(
+    private fun queryUserId(userId: Int): LiveData<AuthResource<out User>> =
+        LiveDataReactiveStreams.fromPublisher(
             authApi.getUser(userId)
                 .onErrorReturn {
                     val errorUser = User()
@@ -50,11 +54,6 @@ class AuthViewModel @Inject constructor(private val authApi: AuthApi) : ViewMode
                 .subscribeOn(Schedulers.io())
         )
 
-        authUser.addSource(source) {
-            authUser.value = it
-            authUser.removeSource(source)
-        }
-    }
 
     internal fun auth(userId: Int) =
         authApi.getUser(userId)
@@ -65,7 +64,7 @@ class AuthViewModel @Inject constructor(private val authApi: AuthApi) : ViewMode
                 onError = { Timber.e(it) }
             )
 
-    internal fun observeUser(): LiveData<AuthResource<out User>> = authUser
+    internal fun observeAuthState(): LiveData<AuthResource<out User>> = sessionManager.getAuthUser()
 
 }
 

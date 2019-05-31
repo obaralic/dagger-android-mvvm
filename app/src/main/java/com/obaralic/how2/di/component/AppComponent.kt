@@ -15,14 +15,18 @@
  */
 package com.obaralic.how2.di.component
 
+import android.app.Application
 import com.obaralic.how2.App
+import com.obaralic.how2.SessionManager
 import com.obaralic.how2.di.module.ActivityBuilderModule
 import com.obaralic.how2.di.module.AppModule
 import com.obaralic.how2.di.module.ViewModelFactoryModule
+import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
 import javax.inject.Singleton
+
 
 @Singleton
 @Component(
