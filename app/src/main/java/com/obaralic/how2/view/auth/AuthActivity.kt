@@ -18,6 +18,7 @@ package com.obaralic.how2.view.auth
 
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -90,9 +91,34 @@ internal class AuthActivity : BaseActivity() {
     }
 
     private fun subscribeObservers() {
-        authViewModel.observeUser().observe(this, Observer<User> { user ->
-            user?.let { Timber.d(user.toString()) }
+        authViewModel.observeUser().observe(this, Observer<AuthResource<out User>> { authResource ->
+            authResource?.apply {
+                when (authResource.status) {
+                    AuthResource.AuthStatus.LOADING -> {
+                        showProgressBar(true)
+                    }
+
+                    AuthResource.AuthStatus.AUTHENTICATED -> {
+                        showProgressBar(false)
+                        Timber.d("LOGIN SUCCESS: ${authResource.data}")
+                    }
+
+                    AuthResource.AuthStatus.ERROR -> {
+                        showProgressBar(false)
+                        Timber.e("LOGIN ERROR: ${authResource.message}")
+                    }
+
+                    AuthResource.AuthStatus.NOT_AUTHENTICATED -> {
+                        showProgressBar(false)
+                    }
+                }
+            }
         })
+    }
+
+    private fun showProgressBar(visible: Boolean) {
+        if (visible) progress_bar.visibility = View.VISIBLE
+        else progress_bar.visibility = View.GONE
     }
 
 }

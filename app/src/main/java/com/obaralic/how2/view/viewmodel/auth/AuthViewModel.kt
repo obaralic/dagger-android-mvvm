@@ -21,6 +21,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
 import com.obaralic.how2.model.User
 import com.obaralic.how2.network.AuthApi
+import com.obaralic.how2.view.auth.AuthResource
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
@@ -29,15 +30,23 @@ import javax.inject.Inject
 
 class AuthViewModel @Inject constructor(private val authApi: AuthApi) : ViewModel() {
 
-    private val authUser: MediatorLiveData<User> by lazy { MediatorLiveData<User>() }
-
-    init {
-        Timber.d("View Model is working...")
-    }
+    private val authUser: MediatorLiveData<AuthResource<out User>>
+            by lazy { MediatorLiveData<AuthResource<out User>>() }
 
     internal fun authenticate(userId: Int) {
+        authUser.value = AuthResource.loading(null)
+
         val source = LiveDataReactiveStreams.fromPublisher(
             authApi.getUser(userId)
+                .onErrorReturn {
+                    val errorUser = User()
+                    errorUser.id = -1
+                    errorUser
+                }
+                .map { user ->
+                    if (user.id == -1) AuthResource.error(null, "Could not authenticate")
+                    else AuthResource.authenticated(user)
+                }
                 .subscribeOn(Schedulers.io())
         )
 
@@ -56,7 +65,7 @@ class AuthViewModel @Inject constructor(private val authApi: AuthApi) : ViewMode
                 onError = { Timber.e(it) }
             )
 
-    internal fun observeUser(): LiveData<User> = authUser
+    internal fun observeUser(): LiveData<AuthResource<out User>> = authUser
 
 }
 
