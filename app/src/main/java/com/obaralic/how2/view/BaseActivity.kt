@@ -16,6 +16,7 @@
 
 package com.obaralic.how2.view
 
+import android.os.Bundle
 import dagger.android.support.DaggerAppCompatActivity
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
@@ -25,6 +26,11 @@ import timber.log.Timber
 internal abstract class BaseActivity : DaggerAppCompatActivity() {
 
     private val disposables: CompositeDisposable by lazy { CompositeDisposable() }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        init()
+    }
 
     override fun onDestroy() {
         super.onDestroy()

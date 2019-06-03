@@ -54,7 +54,6 @@ class AuthViewModel @Inject constructor(
                 .subscribeOn(Schedulers.io())
         )
 
-
     internal fun auth(userId: Int) =
         authApi.getUser(userId)
             .toObservable()
@@ -64,7 +63,7 @@ class AuthViewModel @Inject constructor(
                 onError = { Timber.e(it) }
             )
 
-    internal fun observeAuthState(): LiveData<AuthResource<out User>> = sessionManager.getAuthUser()
+    /*internal*/ fun observeAuthState(): LiveData<AuthResource<out User>> = sessionManager.getAuthUser()
 
 }
 

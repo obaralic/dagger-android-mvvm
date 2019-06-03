@@ -16,8 +16,8 @@
 
 package com.obaralic.how2.view.auth
 
+import android.content.Intent
 import android.graphics.drawable.Drawable
-import android.os.Bundle
 import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -29,6 +29,7 @@ import com.obaralic.how2.R
 import com.obaralic.how2.databinding.AuthActivityBinding
 import com.obaralic.how2.model.User
 import com.obaralic.how2.view.BaseActivity
+import com.obaralic.how2.view.main.MainActivity
 import com.obaralic.how2.view.viewmodel.auth.AuthViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
@@ -52,11 +53,6 @@ internal class AuthActivity : BaseActivity() {
     private lateinit var dataBinding: AuthActivityBinding
 
     private lateinit var authViewModel: AuthViewModel
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        init()
-    }
 
     override fun initBinding() {
         dataBinding = DataBindingUtil.setContentView(this, R.layout.auth_activity)
@@ -90,6 +86,11 @@ internal class AuthActivity : BaseActivity() {
         }
     }
 
+    private fun onLoginSuccess() {
+        startActivity(Intent(this, MainActivity::class.java))
+        finish()
+    }
+
     private fun subscribeObservers() {
         authViewModel.observeAuthState().observe(this, Observer<AuthResource<out User>> { authResource ->
             authResource?.apply {
@@ -101,6 +102,7 @@ internal class AuthActivity : BaseActivity() {
                     AuthResource.AuthStatus.AUTHENTICATED -> {
                         showProgressBar(false)
                         Timber.d("LOGIN SUCCESS: ${authResource.data}")
+                        onLoginSuccess()
                     }
 
                     AuthResource.AuthStatus.ERROR -> {

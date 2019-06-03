@@ -19,6 +19,7 @@ import com.obaralic.how2.di.annotation.ActivityScope
 import com.obaralic.how2.di.module.auth.AuthModule
 import com.obaralic.how2.di.module.auth.AuthViewModelModule
 import com.obaralic.how2.view.auth.AuthActivity
+import com.obaralic.how2.view.main.MainActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -33,4 +34,8 @@ abstract class ActivityBuilderModule {
         ]
     )
     internal abstract fun contributeAuthActivity(): AuthActivity
+
+    @ActivityScope
+    @ContributesAndroidInjector
+    internal abstract fun contributeMainActivity(): MainActivity
 }
