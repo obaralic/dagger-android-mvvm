@@ -33,7 +33,7 @@ import javax.inject.Inject
 internal abstract class SessionAwareActivity : BaseActivity() {
 
     @Inject
-    lateinit var session: SessionManager
+    protected lateinit var session: SessionManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

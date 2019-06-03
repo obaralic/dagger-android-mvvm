@@ -16,6 +16,8 @@
 
 package com.obaralic.how2.view.main
 
+import android.view.Menu
+import android.view.MenuItem
 import androidx.databinding.DataBindingUtil
 import com.obaralic.how2.R
 import com.obaralic.how2.databinding.MainActivityBinding
@@ -23,6 +25,21 @@ import com.obaralic.how2.databinding.MainActivityBinding
 internal class MainActivity : SessionAwareActivity() {
 
     private lateinit var dataBinding: MainActivityBinding
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item!!.itemId) {
+            R.id.logout_item -> {
+                session.logout()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
 
     override fun initBinding() {
         dataBinding = DataBindingUtil.setContentView(this, R.layout.main_activity)

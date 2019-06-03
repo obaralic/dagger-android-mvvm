@@ -2,4 +2,5 @@
 <resources>
     <string name="app_name">How2</string>
     <string name="user_info">%1$s\n%2$s</string>
+    <string name="logout">Logout</string>
 </resources>
