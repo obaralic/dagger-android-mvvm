@@ -1,0 +1,95 @@
+/**
+ *  All rights reserved.
+ *
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+package com.obaralic.how2.view.main.profile
+
+import android.content.Context
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Toast
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+import com.obaralic.how2.R
+import com.obaralic.how2.databinding.ProfileFragmentBinding
+import com.obaralic.how2.model.User
+import com.obaralic.how2.view.BaseFragment
+import com.obaralic.how2.view.auth.AuthResource
+import com.obaralic.how2.view.viewmodel.main.ProfileViewModel
+import kotlinx.android.synthetic.main.profile_fragment.*
+import javax.inject.Inject
+
+class ProfileFragment : BaseFragment() {
+
+    @Inject
+    lateinit var app: Context
+
+    @Inject
+    lateinit var factory: ViewModelProvider.Factory
+
+    lateinit var dataBinding: ProfileFragmentBinding
+
+    lateinit var profileViewModel: ProfileViewModel
+
+    override fun initBinding(inflater: LayoutInflater, container: ViewGroup?): View {
+        dataBinding = DataBindingUtil.inflate(inflater, R.layout.profile_fragment, container, false)
+        return dataBinding.root
+    }
+
+    override fun initViewModel() {
+        profileViewModel = ViewModelProviders.of(this, factory).get(ProfileViewModel::class.java)
+    }
+
+    override fun initLayout() {
+        Toast.makeText(app, "PROFILE", Toast.LENGTH_LONG).show()
+    }
+
+    override fun initRx() {
+        subscribeObservers()
+    }
+
+    private fun subscribeObservers() {
+        // Fragment can be recreated independent from activity,
+        // so we need to make sure that there are no loitering observers.
+        profileViewModel.getAuthUser().removeObservers(viewLifecycleOwner)
+
+        profileViewModel.getAuthUser().observe(this, Observer<AuthResource<out User>> {
+            it?.let { auth ->
+                when (auth.status) {
+                    AuthResource.AuthStatus.AUTHENTICATED -> { setUserDetails(auth.data!!) }
+                    AuthResource.AuthStatus.ERROR -> { setErrorDetails(auth.message!!) }
+                    else -> {}
+                }
+            }
+        })
+    }
+
+    private fun setErrorDetails(message: String) {
+        email.text = message
+        username.text = "N/A"
+        website.text = "N/A"
+    }
+
+    private fun setUserDetails(data: User) {
+        username.text = data.username
+        email.text = data.email
+        website.text = data.website
+    }
+
+}

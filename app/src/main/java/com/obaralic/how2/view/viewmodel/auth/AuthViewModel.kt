@@ -17,7 +17,6 @@ package com.obaralic.how2.view.viewmodel.auth
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.LiveDataReactiveStreams
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
 import com.obaralic.how2.SessionManager
 import com.obaralic.how2.model.User
@@ -63,7 +62,7 @@ class AuthViewModel @Inject constructor(
                 onError = { Timber.e(it) }
             )
 
-    /*internal*/ fun observeAuthState(): LiveData<AuthResource<out User>> = sessionManager.getAuthUser()
+    fun observeAuthState(): LiveData<AuthResource<out User>> = sessionManager.getAuthUser()
 
 }
 
