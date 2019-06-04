@@ -36,6 +36,7 @@ import kotlinx.android.synthetic.main.auth_activity.*
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import javax.inject.Named
 
 
 internal class AuthActivity : BaseActivity() {
@@ -46,7 +47,7 @@ internal class AuthActivity : BaseActivity() {
     @Inject
     lateinit var glide: RequestManager
 
-    @Inject
+    @field:[Inject Named("auth_drawable")]
     lateinit var logoDrawable: Drawable
 
     private lateinit var dataBinding: AuthActivityBinding

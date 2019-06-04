@@ -16,6 +16,9 @@
 
 package com.obaralic.how2.di.module.main
 
+import android.content.Context
+import android.graphics.drawable.Drawable
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.obaralic.how2.base.BaseApp
 import com.obaralic.how2.network.main.MainApi
@@ -24,6 +27,7 @@ import com.obaralic.how2.view.main.posts.PostsRecyclerAdapter
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
+import javax.inject.Named
 
 
 @Module
@@ -51,5 +55,12 @@ abstract class MainModule {
         @MainScope
         @Provides
         fun provideItemDecoration(): VerticalSpaceItemDecoration = VerticalSpaceItemDecoration()
+
+        @JvmStatic
+        @MainScope
+        @Provides
+        @Named("main_drawable")
+        fun provideDrawable(context: Context): Drawable = ContextCompat
+            .getDrawable(context, android.R.drawable.ic_media_play)!!
     }
 }

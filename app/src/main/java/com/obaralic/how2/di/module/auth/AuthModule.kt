@@ -16,10 +16,15 @@
 
 package com.obaralic.how2.di.module.auth
 
+import android.content.Context
+import android.graphics.drawable.Drawable
+import androidx.core.content.ContextCompat
+import com.obaralic.how2.base.BaseApp
 import com.obaralic.how2.network.auth.AuthApi
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
+import javax.inject.Named
 
 
 @Module
@@ -32,6 +37,13 @@ abstract class AuthModule {
         @AuthScope
         @Provides
         fun provideSessionApi(retrofit: Retrofit): AuthApi = retrofit.create(AuthApi::class.java)
+
+        @JvmStatic
+        @AuthScope
+        @Provides
+        @Named("auth_drawable")
+        fun provideDrawable(context: Context): Drawable = ContextCompat
+            .getDrawable(context, android.R.drawable.ic_lock_lock)!!
     }
 }
 

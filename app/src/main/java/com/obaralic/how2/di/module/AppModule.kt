@@ -33,6 +33,7 @@ import dagger.Provides
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module(includes = [AppModule.BindsModule::class])
@@ -73,8 +74,9 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun provideDrawable(app: BaseApp): Drawable = ContextCompat
-        .getDrawable(app, R.drawable.ic_shade)!!
+    @Named("app_drawable")
+    fun provideDrawable(context: Context): Drawable = ContextCompat
+        .getDrawable(context, R.drawable.ic_shade)!!
 
     @Singleton
     @Provides
