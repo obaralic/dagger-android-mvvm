@@ -18,16 +18,23 @@ package com.obaralic.how2.view.main
 
 import android.view.Menu
 import android.view.MenuItem
+import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.NavController
+import androidx.navigation.NavOptions
+import androidx.navigation.Navigation
+import androidx.navigation.ui.NavigationUI
 import com.obaralic.how2.R
 import com.obaralic.how2.base.SessionAwareActivity
 import com.obaralic.how2.databinding.MainActivityBinding
-import com.obaralic.how2.view.main.posts.PostsFragment
-import com.obaralic.how2.view.main.profile.ProfileFragment
+import kotlinx.android.synthetic.main.main_activity.*
 
+@Suppress("SameParameterValue")
 internal class MainActivity : SessionAwareActivity() {
 
     private lateinit var dataBinding: MainActivityBinding
+
+    private lateinit var navController: NavController
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
@@ -40,23 +47,56 @@ internal class MainActivity : SessionAwareActivity() {
                 session.logout()
                 return true
             }
+            android.R.id.home -> {
+                return if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
+                    drawer_layout.closeDrawer(GravityCompat.START)
+                    true
+                } else false
+
+            }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun initViewModel() {
     }
 
     override fun initBinding() {
         dataBinding = DataBindingUtil.setContentView(this, R.layout.main_activity)
     }
 
-    override fun initViewModel() {
+    override fun initLayout() {
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment)
+        NavigationUI.setupActionBarWithNavController(this, navController, drawer_layout)
+        NavigationUI.setupWithNavController(nav_view, navController)
+        nav_view.setNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.nav_profile -> {
+                    val navOptions = NavOptions.Builder()
+                        .setPopUpTo(R.id.main, true)
+                        .build()
+                    navController.navigate(R.id.profileScreen, null, navOptions)
+                }
+                R.id.nav_posts -> {
+                    if (isValidDestination(R.id.postsScreen)) {
+                        navController.navigate(R.id.postsScreen)
+                    }
+                }
+                else -> {
+                    return@setNavigationItemSelectedListener false
+                }
+            }
+            it.isChecked = true
+            drawer_layout.closeDrawer(GravityCompat.START)
+            true
+        }
     }
 
     override fun initRx() {
     }
 
-    override fun initLayout() {
-        supportFragmentManager.beginTransaction().replace(R.id.main_container, ProfileFragment()).commit()
-        supportFragmentManager.beginTransaction().replace(R.id.main_container, PostsFragment()).commit()
-    }
+    private fun isValidDestination(destination: Int) = destination != navController.currentDestination!!.id
+
+    override fun onSupportNavigateUp(): Boolean = NavigationUI.navigateUp(navController, drawer_layout)
 
 }
