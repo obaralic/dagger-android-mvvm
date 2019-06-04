@@ -16,7 +16,11 @@
 
 package com.obaralic.how2.di.module.main
 
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.obaralic.how2.base.BaseApp
 import com.obaralic.how2.network.main.MainApi
+import com.obaralic.how2.util.VerticalSpaceItemDecoration
+import com.obaralic.how2.view.main.posts.PostsRecyclerAdapter
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
@@ -31,5 +35,17 @@ abstract class MainModule {
         @JvmStatic
         @Provides
         fun provideMainApi(retrofit: Retrofit): MainApi = retrofit.create(MainApi::class.java)
+
+        @JvmStatic
+        @Provides
+        fun provideAdapter(): PostsRecyclerAdapter = PostsRecyclerAdapter()
+
+        @JvmStatic
+        @Provides
+        fun provideLinearLayoutManager(app: BaseApp): LinearLayoutManager = LinearLayoutManager(app.baseContext)
+
+        @JvmStatic
+        @Provides
+        fun provideItemDecoration(): VerticalSpaceItemDecoration = VerticalSpaceItemDecoration()
     }
 }

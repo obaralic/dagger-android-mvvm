@@ -69,7 +69,6 @@ abstract class BaseFragment : DaggerFragment() {
     @Synchronized
     protected fun addDisposable(disposable: Disposable?) = disposable?.let { disposables.add(it) }
 
-
     protected abstract fun initBinding(inflater: LayoutInflater, container: ViewGroup?): View
 
     protected abstract fun initViewModel()

@@ -24,11 +24,14 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.obaralic.how2.R
 import com.obaralic.how2.base.BaseFragment
 import com.obaralic.how2.databinding.PostsFragmentBinding
 import com.obaralic.how2.model.Post
+import com.obaralic.how2.util.VerticalSpaceItemDecoration
 import com.obaralic.how2.view.main.Resource
+import kotlinx.android.synthetic.main.posts_fragment.*
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -39,6 +42,15 @@ class PostsFragment : BaseFragment() {
 
     @Inject
     lateinit var factory: ViewModelProvider.Factory
+
+    @Inject
+    lateinit var adapter: PostsRecyclerAdapter
+
+    @Inject
+    lateinit var layoutManager: LinearLayoutManager
+
+    @Inject
+    lateinit var itemDecoration: VerticalSpaceItemDecoration
 
     lateinit var dataBinding: PostsFragmentBinding
 
@@ -53,19 +65,34 @@ class PostsFragment : BaseFragment() {
         viewModel = ViewModelProviders.of(this, factory).get(PostsViewModel::class.java)
     }
 
-    override fun initRx() {
-        subscribeObservers()
+    override fun initLayout() {
+        recycler_view.layoutManager = layoutManager
+        recycler_view.addItemDecoration(itemDecoration)
+        recycler_view.adapter = adapter
     }
 
-    override fun initLayout() {
+    override fun initRx() {
+        subscribeObservers()
     }
 
     private fun subscribeObservers() {
         // Fragment can be recreated independent from activity,
         // so we need to make sure that there are no loitering observers.
         viewModel.observePosts().removeObservers(viewLifecycleOwner)
-        viewModel.observePosts().observe(this, Observer<Resource<out List<Post>>>{resource ->
-            resource?.let { Timber.d("onChange ${resource.data}") }
+        viewModel.observePosts().observe(this, Observer<Resource<out List<Post>>>{ listResource ->
+            listResource?.let {
+                when (it.status) {
+                    Resource.Status.LOADING -> {
+                        Timber.d("Loading...")}
+                    Resource.Status.SUCCESS -> {
+                        Timber.d("Got posts...")
+                            .also { adapter.setPosts(listResource.data!!) }
+                    }
+                    Resource.Status.ERROR -> {
+                        Timber.e(Throwable(it.message))
+                    }
+                }
+            }
         })
 
 
