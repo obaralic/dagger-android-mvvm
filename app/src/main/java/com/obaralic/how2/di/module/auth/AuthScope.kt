@@ -16,19 +16,9 @@
 
 package com.obaralic.how2.di.module.auth
 
-import androidx.lifecycle.ViewModel
-import com.obaralic.how2.di.scope.ViewModelKey
-import com.obaralic.how2.view.auth.AuthViewModel
-import dagger.Binds
-import dagger.Module
-import dagger.multibindings.IntoMap
+import javax.inject.Scope
 
-
-@Module
-abstract class AuthViewModelModule {
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(AuthViewModel::class)
-    abstract fun  bindAuthViewModel(viewModel: AuthViewModel): ViewModel
-}
+@Scope
+@MustBeDocumented
+@Retention
+annotation class AuthScope

@@ -29,6 +29,7 @@ abstract class AuthModule {
     companion object {
 
         @JvmStatic
+        @AuthScope
         @Provides
         fun provideSessionApi(retrofit: Retrofit): AuthApi = retrofit.create(AuthApi::class.java)
     }

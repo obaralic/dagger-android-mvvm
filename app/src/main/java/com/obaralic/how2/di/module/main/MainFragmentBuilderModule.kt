@@ -16,7 +16,6 @@
 
 package com.obaralic.how2.di.module.main
 
-import com.obaralic.how2.di.annotation.FragmentScope
 import com.obaralic.how2.view.main.posts.PostsFragment
 import com.obaralic.how2.view.main.profile.ProfileFragment
 import dagger.Module
@@ -26,11 +25,9 @@ import dagger.android.ContributesAndroidInjector
 @Module
 abstract class MainFragmentBuilderModule {
 
-    @FragmentScope
     @ContributesAndroidInjector
     internal abstract fun contributeProfileFrgment(): ProfileFragment
 
-    @FragmentScope
     @ContributesAndroidInjector
     internal abstract fun contributePostsFrgment(): PostsFragment
 }

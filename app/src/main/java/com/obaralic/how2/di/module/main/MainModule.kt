@@ -33,18 +33,22 @@ abstract class MainModule {
     companion object {
 
         @JvmStatic
+        @MainScope
         @Provides
         fun provideMainApi(retrofit: Retrofit): MainApi = retrofit.create(MainApi::class.java)
 
         @JvmStatic
+        @MainScope
         @Provides
         fun provideAdapter(): PostsRecyclerAdapter = PostsRecyclerAdapter()
 
         @JvmStatic
+        @MainScope
         @Provides
         fun provideLinearLayoutManager(app: BaseApp): LinearLayoutManager = LinearLayoutManager(app.baseContext)
 
         @JvmStatic
+        @MainScope
         @Provides
         fun provideItemDecoration(): VerticalSpaceItemDecoration = VerticalSpaceItemDecoration()
     }

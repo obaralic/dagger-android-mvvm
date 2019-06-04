@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.obaralic.how2.di.annotation
+package com.obaralic.how2.di.scope
 
 import androidx.lifecycle.ViewModel
 import dagger.MapKey
