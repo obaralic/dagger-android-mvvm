@@ -30,27 +30,21 @@
  *  limitations under the License.
  */
 
-package com.obaralic.how2.di.module.main
+package com.obaralic.how2.view.main.profile
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import com.obaralic.how2.di.annotation.ViewModelKey
-import com.obaralic.how2.view.main.posts.PostsViewModel
-import com.obaralic.how2.view.main.profile.ProfileViewModel
-import dagger.Binds
-import dagger.Module
-import dagger.multibindings.IntoMap
+import com.obaralic.how2.base.SessionManager
+import com.obaralic.how2.model.User
+import com.obaralic.how2.view.auth.AuthResource
+import timber.log.Timber
+import javax.inject.Inject
 
-@Module
-abstract class MainViewModelModule {
+class ProfileViewModel @Inject constructor(private val session: SessionManager): ViewModel() {
 
-    @Binds
-    @IntoMap
-    @ViewModelKey(ProfileViewModel::class)
-    abstract fun  bindProfileViewModel(viewModel: ProfileViewModel): ViewModel
+    init {
+        Timber.d("Profile View Module is injected!")
+    }
 
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(PostsViewModel::class)
-    abstract fun  bindPostsViewModel(viewModel: PostsViewModel): ViewModel
+    fun getAuthUser(): LiveData<AuthResource<out User>> = session.getAuthUser()
 }

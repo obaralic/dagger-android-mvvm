@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package com.obaralic.how2
+package com.obaralic.how2.base
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData

@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package com.obaralic.how2.view
+package com.obaralic.how2.base
 
 import android.os.Bundle
 import dagger.android.support.DaggerAppCompatActivity

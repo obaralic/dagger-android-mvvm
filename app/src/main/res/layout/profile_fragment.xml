@@ -20,7 +20,7 @@
         xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable name="user" type="com.obaralic.how2.model.User"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -38,6 +38,7 @@
                 android:id="@+id/email"
                 android:textColor="#000"
                 android:textSize="17sp"
+                android:text="@{user.email}"
                 android:layout_marginTop="30dp"/>
 
         <TextView
@@ -49,6 +50,7 @@
                 android:id="@+id/username"
                 android:textColor="#000"
                 android:textSize="17sp"
+                android:text="@{user.username}"
                 android:layout_marginTop="16dp"/>
 
         <TextView
@@ -60,6 +62,7 @@
                 android:id="@+id/website"
                 android:textColor="#000"
                 android:textSize="17sp"
+                android:text="@{user.website}"
                 android:layout_marginTop="16dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

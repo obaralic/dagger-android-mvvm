@@ -20,7 +20,9 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.databinding.DataBindingUtil
 import com.obaralic.how2.R
+import com.obaralic.how2.base.SessionAwareActivity
 import com.obaralic.how2.databinding.MainActivityBinding
+import com.obaralic.how2.view.main.posts.PostsFragment
 import com.obaralic.how2.view.main.profile.ProfileFragment
 
 internal class MainActivity : SessionAwareActivity() {
@@ -54,6 +56,7 @@ internal class MainActivity : SessionAwareActivity() {
 
     override fun initLayout() {
         supportFragmentManager.beginTransaction().replace(R.id.main_container, ProfileFragment()).commit()
+        supportFragmentManager.beginTransaction().replace(R.id.main_container, PostsFragment()).commit()
     }
 
 }

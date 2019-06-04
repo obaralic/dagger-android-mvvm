@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package com.obaralic.how2.view.main.profile
+package com.obaralic.how2.view.main.posts
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -25,13 +25,14 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.obaralic.how2.R
-import com.obaralic.how2.databinding.ProfileFragmentBinding
-import com.obaralic.how2.model.User
 import com.obaralic.how2.base.BaseFragment
-import com.obaralic.how2.view.auth.AuthResource
+import com.obaralic.how2.databinding.PostsFragmentBinding
+import com.obaralic.how2.model.Post
+import com.obaralic.how2.view.main.Resource
+import timber.log.Timber
 import javax.inject.Inject
 
-class ProfileFragment : BaseFragment() {
+class PostsFragment : BaseFragment() {
 
     @Inject
     lateinit var app: Context
@@ -39,48 +40,34 @@ class ProfileFragment : BaseFragment() {
     @Inject
     lateinit var factory: ViewModelProvider.Factory
 
-    lateinit var dataBinding: ProfileFragmentBinding
+    lateinit var dataBinding: PostsFragmentBinding
 
-    lateinit var viewModel: ProfileViewModel
+    lateinit var viewModel: PostsViewModel
 
     override fun initBinding(inflater: LayoutInflater, container: ViewGroup?): View {
-        dataBinding = DataBindingUtil.inflate(inflater, R.layout.profile_fragment, container, false)
+        dataBinding = DataBindingUtil.inflate(inflater, R.layout.posts_fragment, container, false)
         return dataBinding.root
     }
 
     override fun initViewModel() {
-        viewModel = ViewModelProviders.of(this, factory).get(ProfileViewModel::class.java)
-    }
-
-    override fun initLayout() {
+        viewModel = ViewModelProviders.of(this, factory).get(PostsViewModel::class.java)
     }
 
     override fun initRx() {
         subscribeObservers()
     }
 
+    override fun initLayout() {
+    }
+
     private fun subscribeObservers() {
         // Fragment can be recreated independent from activity,
         // so we need to make sure that there are no loitering observers.
-        viewModel.getAuthUser().removeObservers(viewLifecycleOwner)
-
-        viewModel.getAuthUser().observe(this, Observer<AuthResource<out User>> {
-            it?.let { auth ->
-                when (auth.status) {
-                    AuthResource.AuthStatus.AUTHENTICATED -> { setUserDetails(auth.data!!) }
-                    AuthResource.AuthStatus.ERROR -> { setErrorDetails(auth.message!!) }
-                    else -> {}
-                }
-            }
+        viewModel.observePosts().removeObservers(viewLifecycleOwner)
+        viewModel.observePosts().observe(this, Observer<Resource<out List<Post>>>{resource ->
+            resource?.let { Timber.d("onChange ${resource.data}") }
         })
-    }
 
-    private fun setErrorDetails(message: String) {
-        dataBinding.user = User(email = message, username = "Error", website = "Error")
-    }
 
-    private fun setUserDetails(data: User) {
-        dataBinding.user = data
     }
-
 }

@@ -28,9 +28,8 @@ import com.jakewharton.rxbinding2.view.RxView
 import com.obaralic.how2.R
 import com.obaralic.how2.databinding.AuthActivityBinding
 import com.obaralic.how2.model.User
-import com.obaralic.how2.view.BaseActivity
+import com.obaralic.how2.base.BaseActivity
 import com.obaralic.how2.view.main.MainActivity
-import com.obaralic.how2.view.viewmodel.auth.AuthViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.auth_activity.*
@@ -52,15 +51,15 @@ internal class AuthActivity : BaseActivity() {
 
     private lateinit var dataBinding: AuthActivityBinding
 
-    private lateinit var authViewModel: AuthViewModel
+    private lateinit var viewModel: AuthViewModel
 
     override fun initBinding() {
         dataBinding = DataBindingUtil.setContentView(this, R.layout.auth_activity)
-        dataBinding.viewModel = authViewModel
+        dataBinding.viewModel = viewModel
     }
 
     override fun initViewModel() {
-        authViewModel = ViewModelProviders.of(this, factory).get(AuthViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, factory).get(AuthViewModel::class.java)
     }
 
     override fun initLayout() {
@@ -82,7 +81,7 @@ internal class AuthActivity : BaseActivity() {
 
     private fun attemptLogin() {
         if (user_id_input.text!!.isNotEmpty()) {
-            authViewModel.authenticate(Integer.parseInt(user_id_input.text.toString()))
+            viewModel.authenticate(Integer.parseInt(user_id_input.text.toString()))
         }
     }
 
@@ -92,7 +91,7 @@ internal class AuthActivity : BaseActivity() {
     }
 
     private fun subscribeObservers() {
-        authViewModel.observeAuthState().observe(this, Observer<AuthResource<out User>> { authResource ->
+        viewModel.observeAuthState().observe(this, Observer<AuthResource<out User>> { authResource ->
             authResource?.apply {
                 when (authResource.status) {
                     AuthResource.AuthStatus.LOADING -> {

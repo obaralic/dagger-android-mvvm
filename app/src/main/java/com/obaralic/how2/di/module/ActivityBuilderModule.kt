@@ -19,6 +19,7 @@ import com.obaralic.how2.di.annotation.ActivityScope
 import com.obaralic.how2.di.module.auth.AuthModule
 import com.obaralic.how2.di.module.auth.AuthViewModelModule
 import com.obaralic.how2.di.module.main.MainFragmentBuilderModule
+import com.obaralic.how2.di.module.main.MainModule
 import com.obaralic.how2.di.module.main.MainViewModelModule
 import com.obaralic.how2.view.auth.AuthActivity
 import com.obaralic.how2.view.main.MainActivity
@@ -41,7 +42,8 @@ abstract class ActivityBuilderModule {
     @ContributesAndroidInjector(
         modules = [
             MainFragmentBuilderModule::class,
-            MainViewModelModule::class
+            MainViewModelModule::class,
+            MainModule::class
         ]
     )
     internal abstract fun contributeMainActivity(): MainActivity

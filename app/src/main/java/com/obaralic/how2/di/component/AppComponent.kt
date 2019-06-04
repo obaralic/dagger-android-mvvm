@@ -15,13 +15,10 @@
  */
 package com.obaralic.how2.di.component
 
-import android.app.Application
-import com.obaralic.how2.App
-import com.obaralic.how2.SessionManager
+import com.obaralic.how2.base.BaseApp
 import com.obaralic.how2.di.module.ActivityBuilderModule
 import com.obaralic.how2.di.module.AppModule
 import com.obaralic.how2.di.module.ViewModelFactoryModule
-import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
@@ -37,8 +34,8 @@ import javax.inject.Singleton
         AppModule::class
     ]
 )
-interface AppComponent : AndroidInjector<App> {
+interface AppComponent : AndroidInjector<BaseApp> {
 
     @Component.Factory
-    abstract class Factory : AndroidInjector.Factory<App>
+    abstract class Factory : AndroidInjector.Factory<BaseApp>
 }

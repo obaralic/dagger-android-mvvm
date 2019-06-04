@@ -14,16 +14,22 @@
  *  limitations under the License.
  */
 
-package com.obaralic.how2.model
+package com.obaralic.how2.di.module.main
 
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+import com.obaralic.how2.network.main.MainApi
+import dagger.Module
+import dagger.Provides
+import retrofit2.Retrofit
 
 
-data class User constructor(
-    @Expose @SerializedName("id") var id: Int = 0,
-    @Expose @SerializedName("username") var username: String? = null,
-    @Expose @SerializedName("email") var email: String? = null,
-    @Expose @SerializedName("website") var website: String? = null
-)
+@Module
+abstract class MainModule {
 
+    @Module
+    companion object {
+
+        @JvmStatic
+        @Provides
+        fun provideMainApi(retrofit: Retrofit): MainApi = retrofit.create(MainApi::class.java)
+    }
+}

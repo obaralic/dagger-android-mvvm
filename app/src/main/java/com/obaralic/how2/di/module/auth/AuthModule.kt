@@ -16,7 +16,7 @@
 
 package com.obaralic.how2.di.module.auth
 
-import com.obaralic.how2.network.AuthApi
+import com.obaralic.how2.network.auth.AuthApi
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit

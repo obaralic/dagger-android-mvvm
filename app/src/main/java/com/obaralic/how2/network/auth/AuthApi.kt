@@ -14,21 +14,15 @@
  *  limitations under the License.
  */
 
-package com.obaralic.how2.view.viewmodel.main
+package com.obaralic.how2.network.auth
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import com.obaralic.how2.SessionManager
 import com.obaralic.how2.model.User
-import com.obaralic.how2.view.auth.AuthResource
-import timber.log.Timber
-import javax.inject.Inject
+import io.reactivex.Flowable
+import retrofit2.http.GET
+import retrofit2.http.Path
 
-class ProfileViewModel @Inject constructor(private val session: SessionManager): ViewModel() {
+interface AuthApi {
 
-    init {
-        Timber.d("Profile View Module is injected!")
-    }
-
-    public fun getAuthUser(): LiveData<AuthResource<out User>> = session.getAuthUser()
+    @GET("users/{id}")
+    fun getUser( @Path("id") id: Int): Flowable<User>
 }

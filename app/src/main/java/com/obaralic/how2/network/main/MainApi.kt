@@ -14,16 +14,16 @@
  *  limitations under the License.
  */
 
-package com.obaralic.how2.model
+package com.obaralic.how2.network.main
 
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+import com.obaralic.how2.model.Post
+import io.reactivex.Flowable
+import retrofit2.http.GET
+import retrofit2.http.Query
 
+interface MainApi {
 
-data class User constructor(
-    @Expose @SerializedName("id") var id: Int = 0,
-    @Expose @SerializedName("username") var username: String? = null,
-    @Expose @SerializedName("email") var email: String? = null,
-    @Expose @SerializedName("website") var website: String? = null
-)
-
+    // posts?userId=1
+    @GET("posts")
+    fun getPosts( @Query("userId") id: Int): Flowable<List<Post>>
+}

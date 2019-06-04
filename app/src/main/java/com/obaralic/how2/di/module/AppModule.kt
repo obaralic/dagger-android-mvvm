@@ -22,9 +22,9 @@ import androidx.room.Room
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.RequestOptions
-import com.obaralic.how2.App
+import com.obaralic.how2.base.BaseApp
 import com.obaralic.how2.R
-import com.obaralic.how2.SessionManager
+import com.obaralic.how2.base.SessionManager
 import com.obaralic.how2.model.database.AppDatabase
 import com.obaralic.how2.util.Constants
 import dagger.Binds
@@ -43,7 +43,7 @@ class AppModule {
 
         @Singleton
         @Binds
-        fun bindContext(app: App): Context
+        fun bindContext(app: BaseApp): Context
 
     }
 
@@ -67,13 +67,13 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun provideGlide(app: App, options: RequestOptions): RequestManager = Glide
+    fun provideGlide(app: BaseApp, options: RequestOptions): RequestManager = Glide
         .with(app)
         .setDefaultRequestOptions(options)
 
     @Singleton
     @Provides
-    fun provideDrawable(app: App): Drawable = ContextCompat
+    fun provideDrawable(app: BaseApp): Drawable = ContextCompat
         .getDrawable(app, R.drawable.ic_shade)!!
 
     @Singleton
@@ -82,7 +82,7 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun provideDatabase(app: App): AppDatabase {
+    fun provideDatabase(app: BaseApp): AppDatabase {
         val database = Room
             .databaseBuilder(
                 app.applicationContext,
