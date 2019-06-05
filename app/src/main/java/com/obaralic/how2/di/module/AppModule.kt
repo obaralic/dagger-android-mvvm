@@ -30,6 +30,8 @@ import com.obaralic.how2.util.Constants
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -52,10 +54,17 @@ class AppModule {
     @Provides
     fun provideSessionManager(): SessionManager = SessionManager()
 
+
     @Singleton
     @Provides
-    fun provideRetrofit(): Retrofit = Retrofit.Builder()
-        .baseUrl(Constants.BASE_URL)
+    @Named("retrofit.base.url")
+    fun provideRetrofitBaseUrl(): String = Constants.BASE_URL
+
+    @Singleton
+    @Provides
+    fun provideRetrofit(@Named("retrofit.base.url") base: String, client: OkHttpClient): Retrofit = Retrofit.Builder()
+        .baseUrl(base)
+        .client(client)
         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .addConverterFactory(GsonConverterFactory.create())
         .build()
@@ -68,13 +77,28 @@ class AppModule {
 
     @Singleton
     @Provides
+    fun provideHttpInterceptor(): HttpLoggingInterceptor {
+        val interceptor = HttpLoggingInterceptor()
+        interceptor.level = HttpLoggingInterceptor.Level.BODY
+        return interceptor
+    }
+
+    @Singleton
+    @Provides
+    fun provideHttpClient(interceptor: HttpLoggingInterceptor): OkHttpClient = OkHttpClient
+        .Builder()
+        .addInterceptor(interceptor)
+        .build()
+
+    @Singleton
+    @Provides
     fun provideGlide(app: BaseApp, options: RequestOptions): RequestManager = Glide
         .with(app)
         .setDefaultRequestOptions(options)
 
     @Singleton
     @Provides
-    @Named("app_drawable")
+    @Named("drawable.app")
     fun provideDrawable(context: Context): Drawable = ContextCompat
         .getDrawable(context, R.drawable.ic_shade)!!
 

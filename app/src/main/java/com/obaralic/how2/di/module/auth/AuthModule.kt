@@ -19,7 +19,6 @@ package com.obaralic.how2.di.module.auth
 import android.content.Context
 import android.graphics.drawable.Drawable
 import androidx.core.content.ContextCompat
-import com.obaralic.how2.base.BaseApp
 import com.obaralic.how2.network.auth.AuthApi
 import dagger.Module
 import dagger.Provides
@@ -41,7 +40,7 @@ abstract class AuthModule {
         @JvmStatic
         @AuthScope
         @Provides
-        @Named("auth_drawable")
+        @Named("drawable.auth")
         fun provideDrawable(context: Context): Drawable = ContextCompat
             .getDrawable(context, android.R.drawable.ic_lock_lock)!!
     }

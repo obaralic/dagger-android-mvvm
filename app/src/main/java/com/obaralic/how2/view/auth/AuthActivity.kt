@@ -24,6 +24,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.RequestManager
+import com.google.android.material.snackbar.Snackbar
 import com.jakewharton.rxbinding2.view.RxView
 import com.obaralic.how2.R
 import com.obaralic.how2.databinding.AuthActivityBinding
@@ -47,7 +48,7 @@ internal class AuthActivity : BaseActivity() {
     @Inject
     lateinit var glide: RequestManager
 
-    @field:[Inject Named("auth_drawable")]
+    @field:[Inject Named("drawable.auth")]
     lateinit var logoDrawable: Drawable
 
     private lateinit var dataBinding: AuthActivityBinding

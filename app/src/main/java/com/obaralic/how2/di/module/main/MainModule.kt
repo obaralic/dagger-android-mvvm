@@ -59,7 +59,7 @@ abstract class MainModule {
         @JvmStatic
         @MainScope
         @Provides
-        @Named("main_drawable")
+        @Named("drawable.main")
         fun provideDrawable(context: Context): Drawable = ContextCompat
             .getDrawable(context, android.R.drawable.ic_media_play)!!
     }
