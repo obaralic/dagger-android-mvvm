@@ -16,7 +16,8 @@
 package com.obaralic.how2.di.module
 
 import androidx.lifecycle.ViewModelProvider
-import com.obaralic.how2.view.viewmodel.JViewModelFactory
+//import com.obaralic.how2.view.viewmodel.JViewModelFactory
+import com.obaralic.how2.view.viewmodel.ViewModelFactory
 import dagger.Binds
 import dagger.Module
 
@@ -24,5 +25,5 @@ import dagger.Module
 abstract class ViewModelFactoryModule {
 
     @Binds
-    abstract fun bindViewModelFactory(factory: JViewModelFactory): ViewModelProvider.Factory
+    abstract fun bindViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory
 }

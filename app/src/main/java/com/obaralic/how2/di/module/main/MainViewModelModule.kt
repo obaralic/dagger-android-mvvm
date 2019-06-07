@@ -33,7 +33,7 @@
 package com.obaralic.how2.di.module.main
 
 import androidx.lifecycle.ViewModel
-import com.obaralic.how2.di.scope.ViewModelKey
+import com.obaralic.how2.di.key.ViewModelKey
 import com.obaralic.how2.view.main.posts.PostsViewModel
 import com.obaralic.how2.view.main.profile.ProfileViewModel
 import dagger.Binds

@@ -17,7 +17,7 @@
 package com.obaralic.how2.di.module.auth
 
 import androidx.lifecycle.ViewModel
-import com.obaralic.how2.di.scope.ViewModelKey
+import com.obaralic.how2.di.key.ViewModelKey
 import com.obaralic.how2.view.auth.AuthViewModel
 import dagger.Binds
 import dagger.Module
