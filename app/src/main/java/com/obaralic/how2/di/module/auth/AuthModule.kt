@@ -19,6 +19,7 @@ package com.obaralic.how2.di.module.auth
 import android.content.Context
 import android.graphics.drawable.Drawable
 import androidx.core.content.ContextCompat
+import com.obaralic.how2.R
 import com.obaralic.how2.network.auth.AuthApi
 import dagger.Module
 import dagger.Provides
@@ -42,7 +43,7 @@ abstract class AuthModule {
         @Provides
         @Named("drawable.auth")
         fun provideDrawable(context: Context): Drawable = ContextCompat
-            .getDrawable(context, android.R.drawable.ic_lock_lock)!!
+            .getDrawable(context, R.drawable.ic_shade)!!
     }
 }
 

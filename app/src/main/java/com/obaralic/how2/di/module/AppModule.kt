@@ -100,7 +100,7 @@ class AppModule {
     @Provides
     @Named("drawable.app")
     fun provideDrawable(context: Context): Drawable = ContextCompat
-        .getDrawable(context, R.drawable.ic_shade)!!
+        .getDrawable(context, android.R.drawable.presence_online)!!
 
     @Singleton
     @Provides
