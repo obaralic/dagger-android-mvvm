@@ -19,6 +19,7 @@ package com.obaralic.how2.di.module.auth
 import android.content.Context
 import android.graphics.drawable.Drawable
 import androidx.core.content.ContextCompat
+import com.google.firebase.auth.FirebaseAuth
 import com.obaralic.how2.R
 import com.obaralic.how2.network.auth.AuthApi
 import dagger.Module
@@ -32,6 +33,11 @@ abstract class AuthModule {
 
     @Module
     companion object {
+
+        @JvmStatic
+        @AuthScope
+        @Provides
+        fun provideFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
 
         @JvmStatic
         @AuthScope

@@ -14,10 +14,20 @@
  *  limitations under the License.
  */
 
-package com.obaralic.how2.util
+package com.obaralic.how2.view.auth.firebase
 
-object Constants {
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.obaralic.how2.util.livedata.FirebaseAuthLiveData
+import javax.inject.Inject
 
-    const val BASE_URL = "https://jsonplaceholder.typicode.com"
-    const val CRASHLYTICS_ENABLED = "crashlytics_enabled"
+class FirebaseAuthViewModel
+@Inject constructor(private val auth: FirebaseAuth) : ViewModel() {
+
+    private val authUser: FirebaseAuthLiveData by lazy { FirebaseAuthLiveData(auth) }
+
+    fun getAuthUser(): LiveData<FirebaseUser> = authUser
+
 }

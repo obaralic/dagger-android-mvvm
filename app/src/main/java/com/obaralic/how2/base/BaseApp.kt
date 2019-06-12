@@ -31,14 +31,22 @@
  */
 package com.obaralic.how2.base
 
+import com.crashlytics.android.Crashlytics
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.obaralic.how2.BuildConfig
+import com.obaralic.how2.R
 import com.obaralic.how2.di.component.DaggerAppComponent
+import com.obaralic.how2.util.Constants.CRASHLYTICS_ENABLED
 import com.obaralic.how2.util.CrashReportingTree
 import dagger.android.AndroidInjector
 import dagger.android.support.DaggerApplication
 import timber.log.Timber
+import javax.inject.Inject
 
 class BaseApp : DaggerApplication() {
+
+    @Inject
+    lateinit var config: FirebaseRemoteConfig
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
         return DaggerAppComponent.factory().create(this)
@@ -46,11 +54,18 @@ class BaseApp : DaggerApplication() {
 
     override fun onCreate() {
         super.onCreate()
+        initFirebase()
         initTimber()
     }
 
+    private fun initFirebase() {
+        Crashlytics.setUserName("Obaralic Test")
+        config.setDefaults(R.xml.config)
+        config.fetchAndActivate().addOnCompleteListener { initTimber() }
+    }
+
     private fun initTimber() {
-        if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
-        else Timber.plant(CrashReportingTree())
+        if (config.getBoolean(CRASHLYTICS_ENABLED)) Timber.plant(CrashReportingTree())
+        else Timber.plant(Timber.DebugTree())
     }
 }

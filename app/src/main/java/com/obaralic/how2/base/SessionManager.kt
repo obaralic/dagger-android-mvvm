@@ -34,14 +34,10 @@ class SessionManager @Inject constructor() {
     fun getAuthUser(): LiveData<AuthResource<out User>> = cachedUser
 
     fun authenticate(source: LiveData<AuthResource<out User>>) {
-        if(cachedUser != null){
-            cachedUser.value = AuthResource.loading(null)
-            cachedUser.addSource(source) {
-                cachedUser.value = it
-                cachedUser.removeSource(source)
-            }
-        } else {
-            Timber.d("Previous session detected. Returning cached user.")
+        cachedUser.value = AuthResource.loading(null)
+        cachedUser.addSource(source) {
+            cachedUser.value = it
+            cachedUser.removeSource(source)
         }
     }
 

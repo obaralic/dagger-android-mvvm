@@ -24,7 +24,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.RequestManager
-import com.google.android.material.snackbar.Snackbar
 import com.jakewharton.rxbinding2.view.RxView
 import com.obaralic.how2.R
 import com.obaralic.how2.databinding.AuthActivityBinding
@@ -35,6 +34,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.auth_activity.*
 import timber.log.Timber
+import java.lang.RuntimeException
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Named

@@ -22,6 +22,7 @@ import androidx.room.Room
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.RequestOptions
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.obaralic.how2.base.BaseApp
 import com.obaralic.how2.R
 import com.obaralic.how2.base.SessionManager
@@ -52,8 +53,11 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun provideSessionManager(): SessionManager = SessionManager()
+    fun provideRemoteConfig(): FirebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
 
+    @Singleton
+    @Provides
+    fun provideSessionManager(): SessionManager = SessionManager()
 
     @Singleton
     @Provides
