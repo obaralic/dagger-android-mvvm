@@ -31,7 +31,9 @@
  */
 package com.obaralic.how2.base
 
+import android.util.Log
 import com.crashlytics.android.Crashlytics
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.obaralic.how2.BuildConfig
 import com.obaralic.how2.R
@@ -48,6 +50,9 @@ class BaseApp : DaggerApplication() {
     @Inject
     lateinit var config: FirebaseRemoteConfig
 
+    @Inject
+    lateinit var auth: FirebaseAuth
+
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
         return DaggerAppComponent.factory().create(this)
     }
@@ -61,7 +66,8 @@ class BaseApp : DaggerApplication() {
     private fun initFirebase() {
         Crashlytics.setUserName("Obaralic Test")
         config.setDefaults(R.xml.config)
-        config.fetchAndActivate().addOnCompleteListener { initTimber() }
+        config.fetchAndActivate().addOnCompleteListener {
+            initTimber() }
     }
 
     private fun initTimber() {

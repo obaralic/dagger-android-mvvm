@@ -45,6 +45,7 @@ internal class MainActivity : SessionAwareActivity() {
         when (item!!.itemId) {
             R.id.logout_item -> {
                 session.logout()
+                fireAuth.signOut()
                 return true
             }
             android.R.id.home -> {

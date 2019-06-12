@@ -21,13 +21,22 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.obaralic.how2.util.livedata.FirebaseAuthLiveData
+import timber.log.Timber
 import javax.inject.Inject
 
-class FirebaseAuthViewModel
-@Inject constructor(private val auth: FirebaseAuth) : ViewModel() {
+class FirebaseAuthViewModel @Inject constructor(private val auth: FirebaseAuth) : ViewModel() {
 
     private val authUser: FirebaseAuthLiveData by lazy { FirebaseAuthLiveData(auth) }
 
-    fun getAuthUser(): LiveData<FirebaseUser> = authUser
+    fun observeAuthUser(): LiveData<FirebaseUser?> = authUser
 
+    fun authenticate(email: String, pass: String) {
+        Timber.d("Authenticate attempt")
+        auth.signInWithEmailAndPassword(email, pass)
+    }
+
+    fun signup(email: String, pass: String) {
+        Timber.d("Signup attempt")
+        auth.createUserWithEmailAndPassword(email, pass)
+    }
 }

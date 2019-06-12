@@ -22,10 +22,12 @@ import androidx.room.Room
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.RequestOptions
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.obaralic.how2.base.BaseApp
 import com.obaralic.how2.R
 import com.obaralic.how2.base.SessionManager
+import com.obaralic.how2.di.module.auth.AuthScope
 import com.obaralic.how2.model.database.AppDatabase
 import com.obaralic.how2.util.Constants
 import dagger.Binds
@@ -54,6 +56,10 @@ class AppModule {
     @Singleton
     @Provides
     fun provideRemoteConfig(): FirebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
+
+    @Singleton
+    @Provides
+    fun provideFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
 
     @Singleton
     @Provides

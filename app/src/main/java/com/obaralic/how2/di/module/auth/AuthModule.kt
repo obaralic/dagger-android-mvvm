@@ -37,11 +37,6 @@ abstract class AuthModule {
         @JvmStatic
         @AuthScope
         @Provides
-        fun provideFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
-
-        @JvmStatic
-        @AuthScope
-        @Provides
         fun provideSessionApi(retrofit: Retrofit): AuthApi = retrofit.create(AuthApi::class.java)
 
         @JvmStatic

@@ -37,6 +37,7 @@ package com.obaralic.how2.base
 import android.content.Intent
 import android.os.Bundle
 import androidx.lifecycle.Observer
+import com.google.firebase.auth.FirebaseAuth
 import com.obaralic.how2.model.User
 import com.obaralic.how2.view.auth.AuthActivity
 import com.obaralic.how2.view.auth.AuthResource
@@ -48,6 +49,9 @@ internal abstract class SessionAwareActivity : BaseActivity() {
 
     @Inject
     protected lateinit var session: SessionManager
+
+    @Inject
+    protected lateinit var fireAuth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

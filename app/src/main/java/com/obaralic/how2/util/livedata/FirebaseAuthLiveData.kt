@@ -16,14 +16,14 @@
 
 package com.obaralic.how2.util.livedata
 
-import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import timber.log.Timber
 import javax.inject.Inject
 
 class FirebaseAuthLiveData @Inject constructor(private val auth: FirebaseAuth) :
-    LiveData<FirebaseUser>(),  FirebaseAuth.AuthStateListener {
+    MutableLiveData<FirebaseUser?>(),  FirebaseAuth.AuthStateListener {
 
     override fun onAuthStateChanged(auth: FirebaseAuth) {
         val user = auth.currentUser

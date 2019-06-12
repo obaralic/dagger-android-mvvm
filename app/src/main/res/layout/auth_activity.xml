@@ -4,8 +4,12 @@
 
     <data>
         <variable
-                name="viewModel"
+                name="retroAuthViewModel"
                 type="com.obaralic.how2.view.auth.AuthViewModel"
+        />
+        <variable
+                name="fireAuthViewModel"
+                type="com.obaralic.how2.view.auth.firebase.FirebaseAuthViewModel"
         />
     </data>
 
@@ -32,6 +36,7 @@
                 app:layout_constraintRight_toRightOf="parent"
                 android:hint="User id"
                 android:textColor="#000"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/user_id_input"
@@ -45,6 +50,7 @@
                 android:textColor="#000"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
                 android:id="@+id/user_email_input"
                 android:layout_marginTop="20dp"/>
 
@@ -54,6 +60,7 @@
                 app:layout_constraintRight_toRightOf="parent"
                 android:hint="Password"
                 android:textColor="#000"
+                android:inputType="textPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/user_password_input"
