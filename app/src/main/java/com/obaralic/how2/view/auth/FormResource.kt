@@ -16,20 +16,30 @@
 
 package com.obaralic.how2.view.auth
 
+data class FormResource(
+    val status: FormStatus,
+    val emailFormError: String? = null,
+    val passFormError: String? = null
+) {
 
-data class AuthResource<T> constructor(val status: AuthStatus, val data: T?, val message: String?) {
-
-    enum class AuthStatus {
-        AUTHENTICATED,
-        ERROR,
+    enum class FormStatus {
+        VALID,
         LOADING,
-        NOT_AUTHENTICATED
+        INVALID_EMAIL,
+        INVALID_PASSWORD
     }
 
     companion object {
-        fun <T> authenticated(data: T?): AuthResource<T> = AuthResource(AuthStatus.AUTHENTICATED, data, null)
-        fun <T> error(data: T?, msg: String?): AuthResource<T> = AuthResource(AuthStatus.ERROR, data, msg)
-        fun <T> loading(data: T?): AuthResource<T> = AuthResource(AuthStatus.LOADING, data, null)
-        fun <T> logout(): AuthResource<T> = AuthResource(AuthStatus.NOT_AUTHENTICATED, null, null)
+        fun invalidEmail(message: String): FormResource =
+            FormResource(FormStatus.INVALID_EMAIL, emailFormError = message)
+
+        fun invalidPassword(message: String): FormResource =
+            FormResource(FormStatus.INVALID_PASSWORD, passFormError = message)
+
+        fun validForm(): FormResource =
+            FormResource(status = FormStatus.VALID)
+
+        fun freeze(): FormResource =
+            FormResource(status = FormStatus.LOADING)
     }
 }

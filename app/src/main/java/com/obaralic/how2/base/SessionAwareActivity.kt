@@ -32,13 +32,9 @@
 
 package com.obaralic.how2.base
 
-
-
 import android.content.Intent
 import android.os.Bundle
 import androidx.lifecycle.Observer
-import com.google.firebase.auth.FirebaseAuth
-import com.obaralic.how2.model.User
 import com.obaralic.how2.view.auth.AuthActivity
 import com.obaralic.how2.view.auth.AuthResource
 import timber.log.Timber
@@ -50,39 +46,34 @@ internal abstract class SessionAwareActivity : BaseActivity() {
     @Inject
     protected lateinit var session: SessionManager
 
-    @Inject
-    protected lateinit var fireAuth: FirebaseAuth
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         subscribeObservers()
     }
 
     private fun subscribeObservers() {
-        session.getAuthUser().observe(this, Observer<AuthResource<out User>> { auth ->
-
-            auth?.let {
+        session.getUser()
+            .observe(this, Observer { auth ->
+                Timber.d("Auth State: ${auth.status}")
                 when (auth.status) {
                     AuthResource.AuthStatus.LOADING -> {
                         Timber.d("onChanged: LOADING...")
                     }
 
                     AuthResource.AuthStatus.AUTHENTICATED -> {
-                        Timber.d("onChanged: AUTHENTICATED as: + ${auth.data!!.email}");
+                        Timber.d("onChanged: AUTHENTICATED as: + ${auth.data!!.email}")
+                    }
+
+                    AuthResource.AuthStatus.ERROR -> {
+                        Timber.d("onChanged: ERROR")
                     }
 
                     AuthResource.AuthStatus.NOT_AUTHENTICATED -> {
                         Timber.d("onChanged: NOT AUTHENTICATED. Navigating to Login screen.")
                         navigateToLoginScreen()
                     }
-
-                    AuthResource.AuthStatus.ERROR -> {
-                        Timber.d("onChanged: ERROR")
-                    }
                 }
-
-            }
-        })
+            })
     }
 
     private fun navigateToLoginScreen() {

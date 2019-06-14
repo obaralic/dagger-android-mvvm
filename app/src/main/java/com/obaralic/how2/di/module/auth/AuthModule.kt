@@ -17,8 +17,12 @@
 package com.obaralic.how2.di.module.auth
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.drawable.Drawable
 import androidx.core.content.ContextCompat
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.obaralic.how2.R
 import com.obaralic.how2.network.auth.AuthApi
@@ -43,8 +47,27 @@ abstract class AuthModule {
         @AuthScope
         @Provides
         @Named("drawable.auth")
-        fun provideDrawable(context: Context): Drawable = ContextCompat
-            .getDrawable(context, R.drawable.ic_shade)!!
+        fun provideDrawable(context: Context): Drawable = ContextCompat.getDrawable(context, R.drawable.ic_shade)!!
+
+        @JvmStatic
+        @AuthScope
+        @Provides
+        fun provideGoogleSignInOptions(context: Context): GoogleSignInOptions = GoogleSignInOptions
+            .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(context.getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+
+        @JvmStatic
+        @AuthScope
+        @Provides
+        fun provideGoogleSignInClient(context: Context, options: GoogleSignInOptions): GoogleSignInClient =
+            GoogleSignIn.getClient(context, options)
+
+        @JvmStatic
+        @AuthScope
+        @Provides
+        fun provideGoogleSignIntent(client: GoogleSignInClient) = client.signInIntent
     }
 }
 

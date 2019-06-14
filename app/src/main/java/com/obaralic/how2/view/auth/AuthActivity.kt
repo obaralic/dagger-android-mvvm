@@ -18,22 +18,22 @@ package com.obaralic.how2.view.auth
 
 import android.content.Intent
 import android.graphics.drawable.Drawable
-import android.util.Log
 import android.view.View
-import android.widget.Toast
+import android.view.inputmethod.EditorInfo
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.RequestManager
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.common.api.ApiException
 import com.jakewharton.rxbinding2.view.RxView
 import com.obaralic.how2.R
-import com.obaralic.how2.databinding.AuthActivityBinding
-import com.obaralic.how2.model.User
 import com.obaralic.how2.base.BaseActivity
-import com.obaralic.how2.util.Constants
+import com.obaralic.how2.databinding.AuthActivityBinding
+import com.obaralic.how2.util.afterTextChanged
+import com.obaralic.how2.util.snack
 import com.obaralic.how2.view.auth.firebase.FirebaseAuthViewModel
 import com.obaralic.how2.view.main.MainActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -51,6 +51,9 @@ internal class AuthActivity : BaseActivity() {
     lateinit var factory: ViewModelProvider.Factory
 
     @Inject
+    lateinit var googleSignInIntent: Intent
+
+    @Inject
     lateinit var glide: RequestManager
 
     @field:[Inject Named("drawable.auth")]
@@ -58,23 +61,34 @@ internal class AuthActivity : BaseActivity() {
 
     private lateinit var dataBinding: AuthActivityBinding
 
-    private lateinit var retroAuthViewModel: AuthViewModel
-
     private lateinit var fireAuthViewModel: FirebaseAuthViewModel
 
     override fun initViewModel() {
-        retroAuthViewModel = ViewModelProviders.of(this, factory).get(AuthViewModel::class.java)
         fireAuthViewModel = ViewModelProviders.of(this, factory).get(FirebaseAuthViewModel::class.java)
     }
 
     override fun initBinding() {
         dataBinding = DataBindingUtil.setContentView(this, R.layout.auth_activity)
-        dataBinding.retroAuthViewModel = retroAuthViewModel
         dataBinding.fireAuthViewModel = fireAuthViewModel
     }
 
     override fun initLayout() {
         glide.load(logoDrawable).into(login_logo)
+
+        user_email_input.afterTextChanged {
+            fireAuthViewModel.formDataChanged(getFormInput())
+        }
+
+        user_password_input.apply {
+            afterTextChanged { fireAuthViewModel.formDataChanged(getFormInput()) }
+
+            setOnEditorActionListener { _, actionId, _ ->
+                when (actionId) {
+                    EditorInfo.IME_ACTION_DONE -> attemptLogin()
+                }
+                false
+            }
+        }
     }
 
     override fun initRx() {
@@ -85,7 +99,7 @@ internal class AuthActivity : BaseActivity() {
             .debounce(500, TimeUnit.MILLISECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy(
-                onNext = { Timber.d("Login action...").apply { attemptLogin() } },
+                onNext = { attemptLogin() },
                 onError = { Timber.e(it) }
             )
         )
@@ -95,28 +109,89 @@ internal class AuthActivity : BaseActivity() {
             .debounce(500, TimeUnit.MILLISECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy(
-                onNext = { Timber.d("SignUp action...").apply { attemptSignUp() } },
+                onNext = { attemptSignUp() },
+                onError = { Timber.e(it) }
+            )
+        )
+
+        addDisposable(RxView
+            .clicks(google_button)
+            .debounce(500, TimeUnit.MILLISECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy(
+                onNext = { attemptGoogleLogin() },
                 onError = { Timber.e(it) }
             )
         )
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == RC_SIGN_IN) {
+            try {
+                val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+                val account = task.getResult(ApiException::class.java)
+                fireAuthViewModel.authenticate(account!!)
+            } catch (e: ApiException) {
+                Timber.e(e, "Google sign in failed")
+            }
+        }
+    }
+
+    private fun subscribeObservers() {
+        fireAuthViewModel.observeFormState()
+            .observe(this, Observer {
+                var enable = false
+
+                when (it.status) {
+                    FormResource.FormStatus.INVALID_EMAIL -> user_email_input.error = it.emailFormError
+                    FormResource.FormStatus.INVALID_PASSWORD -> user_password_input.error = it.passFormError
+                    FormResource.FormStatus.LOADING -> enable = false
+                    FormResource.FormStatus.VALID -> enable = true
+                }
+
+                enableFormButtons(enable)
+            })
+
+        fireAuthViewModel.observeAuthState()
+            .observe(this, Observer { authState ->
+                Timber.d("Auth State: ${authState.status}")
+                when (authState.status) {
+                    AuthResource.AuthStatus.LOADING -> {
+                        showProgressBar(true)
+                    }
+
+                    AuthResource.AuthStatus.AUTHENTICATED -> {
+                        Timber.d("Auth Success: ${authState.data!!.email}")
+                        showProgressBar(false)
+                        onLoginSuccess()
+                    }
+
+                    AuthResource.AuthStatus.ERROR -> {
+                        Timber.e("Auth Error: ${authState.message}")
+                        snack(constraint, authState.message!!)
+                        showProgressBar(false)
+                        enableFormButtons(true)
+                    }
+
+                    AuthResource.AuthStatus.NOT_AUTHENTICATED -> {
+                        showProgressBar(false)
+                    }
+                }
+            })
+    }
+
+    private fun attemptGoogleLogin() {
+        val signInIntent = googleSignInIntent
+        startActivityForResult(signInIntent, RC_SIGN_IN)
+    }
+
     private fun attemptLogin() {
-        val retroId = if (user_id_input.text!!.isEmpty()) -1
-        else Integer.parseInt(user_id_input.text.toString())
-        val email = user_email_input.text.toString()
-        val pass = user_password_input.text.toString()
-
-        // TODO: Encapsulate into MergedAuthViewModel and AuthRepository
-        //  retroAuthViewModel.authenticate()
-
-        fireAuthViewModel.authenticate(email, pass)
+        fireAuthViewModel.authenticate(getFormInput())
     }
 
     private fun attemptSignUp() {
-        val email = user_email_input.text.toString()
-        val pass = user_password_input.text.toString()
-        fireAuthViewModel.signup(email, pass)
+        fireAuthViewModel.create(getFormInput())
     }
 
     private fun onLoginSuccess() {
@@ -124,46 +199,20 @@ internal class AuthActivity : BaseActivity() {
         finish()
     }
 
-    private fun subscribeObservers() {
-        retroAuthViewModel.observeAuthState()
-            .observe(this, Observer<AuthResource<out User>> { authResource ->
-                authResource?.apply {
-                    when (authResource.status) {
-                        AuthResource.AuthStatus.LOADING -> {
-                            showProgressBar(true)
-                        }
-
-                        AuthResource.AuthStatus.AUTHENTICATED -> {
-                            showProgressBar(false)
-                            Timber.d("LOGIN SUCCESS: ${authResource.data}")
-                            onLoginSuccess()
-                        }
-
-                        AuthResource.AuthStatus.ERROR -> {
-                            showProgressBar(false)
-                            Timber.e("LOGIN ERROR: ${authResource.message}")
-                        }
-
-                        AuthResource.AuthStatus.NOT_AUTHENTICATED -> {
-                            showProgressBar(false)
-                        }
-                    }
-                }
-            })
-
-        fireAuthViewModel.observeAuthUser()
-            .observe(this, Observer {user ->
-                user?.let {
-                    Toast.makeText(this, "${it.email}", Toast.LENGTH_LONG).show()
-                    onLoginSuccess()
-                } ?:
-                Toast.makeText(this, "Not authenticated", Toast.LENGTH_LONG).show()
-            })
+    private fun enableFormButtons(enable: Boolean) {
+        login_button.isEnabled = enable
+        signup_button.isEnabled = enable
     }
 
-    private fun showProgressBar(visible: Boolean) {
+    private fun showProgressBar(visible: Boolean) =
         if (visible) progress_bar.visibility = View.VISIBLE
         else progress_bar.visibility = View.GONE
-    }
 
+
+    private fun getFormInput() =
+        Pair(user_email_input.text.toString(), user_password_input.text.toString())
+
+    companion object {
+        private const val RC_SIGN_IN = 9001
+    }
 }

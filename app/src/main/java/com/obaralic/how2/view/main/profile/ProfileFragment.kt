@@ -24,6 +24,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import com.google.firebase.auth.FirebaseUser
 import com.obaralic.how2.R
 import com.obaralic.how2.databinding.ProfileFragmentBinding
 import com.obaralic.how2.model.User
@@ -62,16 +63,20 @@ class ProfileFragment : BaseFragment() {
     private fun subscribeObservers() {
         // Fragment can be recreated independent from activity,
         // so we need to make sure that there are no loitering observers.
-        viewModel.getAuthUser().removeObservers(viewLifecycleOwner)
+        viewModel.getFireAuth().removeObservers(viewLifecycleOwner)
 
-        viewModel.getAuthUser().observe(this, Observer<AuthResource<out User>> {
-            it?.let { auth ->
-                when (auth.status) {
-                    AuthResource.AuthStatus.AUTHENTICATED -> { setUserDetails(auth.data!!) }
-                    AuthResource.AuthStatus.ERROR -> { setErrorDetails(auth.message!!) }
-                    else -> {}
+        viewModel.getFireAuth().observe(this, Observer<AuthResource<FirebaseUser?>> {
+            when (it.status) {
+                AuthResource.AuthStatus.AUTHENTICATED -> {
+                    setUserDetails(it.data!!)
+                }
+                AuthResource.AuthStatus.ERROR -> {
+                    setErrorDetails(it.message!!)
+                }
+                else -> {
                 }
             }
+
         })
     }
 
@@ -79,8 +84,8 @@ class ProfileFragment : BaseFragment() {
         dataBinding.user = User(email = message, username = "Error", website = "Error")
     }
 
-    private fun setUserDetails(data: User) {
-        dataBinding.user = data
+    private fun setUserDetails(data: FirebaseUser) {
+        dataBinding.fireUser = data
     }
 
 }

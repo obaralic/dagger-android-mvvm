@@ -18,31 +18,62 @@ package com.obaralic.how2.base
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.AuthCredential
+import com.google.firebase.auth.AuthResult
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.obaralic.how2.model.User
+import com.obaralic.how2.util.livedata.FirebaseAuthLiveData
 import com.obaralic.how2.view.auth.AuthResource
-import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
 
 @Singleton
-class SessionManager @Inject constructor() {
+class SessionManager @Inject constructor(private var auth: FirebaseAuth) {
 
-    private val cachedUser: MediatorLiveData<AuthResource<out User>>
-            by lazy { MediatorLiveData<AuthResource<out User>>() }
+    private val user: FirebaseAuthLiveData by lazy { FirebaseAuthLiveData(auth) }
 
-    fun getAuthUser(): LiveData<AuthResource<out User>> = cachedUser
-
-    fun authenticate(source: LiveData<AuthResource<out User>>) {
-        cachedUser.value = AuthResource.loading(null)
-        cachedUser.addSource(source) {
-            cachedUser.value = it
-            cachedUser.removeSource(source)
-        }
+    private val onFailure: (Exception) -> Unit = {
+        user.value = AuthResource.error(null, it.message)
     }
 
-    fun logout() {
-        Timber.d("Logging out...")
-        cachedUser.value = AuthResource.logout()
+    fun getUser(): LiveData<AuthResource<FirebaseUser?>> = user
+
+    fun authenticate(email: String, pass: String) {
+        user.value = AuthResource.loading(null)
+        auth.signInWithEmailAndPassword(email, pass)
+            .addOnFailureListener { onFailure(it) }
+    }
+
+    fun create(email: String, pass: String) {
+        user.value = AuthResource.loading(null)
+        auth.createUserWithEmailAndPassword(email, pass)
+            .addOnFailureListener { onFailure(it) }
+    }
+
+    fun authenticate(credential: AuthCredential) {
+        user.value = AuthResource.loading(null)
+        auth.signInWithCredential(credential)
+            .addOnFailureListener { onFailure(it) }
+    }
+
+    fun signOut() = auth.signOut()
+
+    @Deprecated("JsonPlaceholder")
+    private val cachedRetroUser: MediatorLiveData<AuthResource<out User>>
+            by lazy { MediatorLiveData<AuthResource<out User>>() }
+
+    @Deprecated("JsonPlaceholder")
+    fun getAuthUser(): LiveData<AuthResource<out User>> = cachedRetroUser
+
+    @Deprecated("JsonPlaceholder")
+    fun authenticate(source: LiveData<AuthResource<out User>>) {
+        cachedRetroUser.value = AuthResource.loading(null)
+        cachedRetroUser.addSource(source) {
+            cachedRetroUser.value = it
+            cachedRetroUser.removeSource(source)
+        }
     }
 }

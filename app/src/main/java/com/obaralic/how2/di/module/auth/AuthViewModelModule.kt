@@ -18,7 +18,7 @@ package com.obaralic.how2.di.module.auth
 
 import androidx.lifecycle.ViewModel
 import com.obaralic.how2.di.key.ViewModelKey
-import com.obaralic.how2.view.auth.AuthViewModel
+import com.obaralic.how2.view.auth.retrofit.RetrofitAuthViewModel
 import com.obaralic.how2.view.auth.firebase.FirebaseAuthViewModel
 import dagger.Binds
 import dagger.Module
@@ -30,8 +30,8 @@ abstract class AuthViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(AuthViewModel::class)
-    abstract fun  bindAuthViewModel(viewModel: AuthViewModel): ViewModel
+    @ViewModelKey(RetrofitAuthViewModel::class)
+    abstract fun  bindRetrofitAuthViewModel(viewModel: RetrofitAuthViewModel): ViewModel
 
     @Binds
     @IntoMap

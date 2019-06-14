@@ -3,14 +3,13 @@
         xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <variable
-                name="retroAuthViewModel"
-                type="com.obaralic.how2.view.auth.AuthViewModel"
-        />
+        <import type="com.obaralic.how2.view.auth.FormResource.FormStatus"/>
         <variable
                 name="fireAuthViewModel"
-                type="com.obaralic.how2.view.auth.firebase.FirebaseAuthViewModel"
-        />
+                type="com.obaralic.how2.view.auth.firebase.FirebaseAuthViewModel"/>
+        <variable
+                name="formResource"
+                type="com.obaralic.how2.view.auth.FormResource"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -73,6 +72,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/login_button"
+                android:enabled="@{formResource.status == FormStatus.VALID}"
                 android:layout_marginTop="15dp"
                 android:text="Login"/>
 
@@ -84,7 +84,17 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/signup_button"
                 android:layout_marginTop="15dp"
+                android:enabled="@{formResource.status == FormStatus.VALID}"
                 android:text="Signup"/>
+
+        <com.google.android.gms.common.SignInButton
+                app:layout_constraintTop_toBottomOf="@+id/signup_button"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginTop="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/google_button"/>
 
         <ProgressBar
                 app:layout_constraintTop_toTopOf="parent"

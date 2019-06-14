@@ -60,14 +60,12 @@ class BaseApp : DaggerApplication() {
     override fun onCreate() {
         super.onCreate()
         initFirebase()
-        initTimber()
     }
 
     private fun initFirebase() {
         Crashlytics.setUserName("Obaralic Test")
         config.setDefaults(R.xml.config)
-        config.fetchAndActivate().addOnCompleteListener {
-            initTimber() }
+        config.fetchAndActivate().addOnCompleteListener { initTimber() }
     }
 
     private fun initTimber() {

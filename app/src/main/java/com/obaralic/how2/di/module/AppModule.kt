@@ -50,7 +50,6 @@ class AppModule {
         @Singleton
         @Binds
         fun bindContext(app: BaseApp): Context
-
     }
 
     @Singleton
@@ -63,7 +62,7 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun provideSessionManager(): SessionManager = SessionManager()
+    fun provideSessionManager(firebaseAuth: FirebaseAuth): SessionManager = SessionManager(firebaseAuth)
 
     @Singleton
     @Provides

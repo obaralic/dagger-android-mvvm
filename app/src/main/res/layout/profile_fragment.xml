@@ -16,11 +16,11 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools">
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <variable name="user" type="com.obaralic.how2.model.User"/>
+        <variable name="fireUser" type="com.google.firebase.auth.FirebaseUser"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -38,7 +38,7 @@
                 android:id="@+id/email"
                 android:textColor="#000"
                 android:textSize="17sp"
-                android:text="@{user.email}"
+                android:text="@{fireUser.email}"
                 android:layout_marginTop="30dp"/>
 
         <TextView
@@ -50,7 +50,7 @@
                 android:id="@+id/username"
                 android:textColor="#000"
                 android:textSize="17sp"
-                android:text="@{user.username}"
+                android:text="@{fireUser.displayName}"
                 android:layout_marginTop="16dp"/>
 
         <TextView
@@ -62,7 +62,7 @@
                 android:id="@+id/website"
                 android:textColor="#000"
                 android:textSize="17sp"
-                android:text="@{user.website}"
+                android:text="@{fireUser.uid}"
                 android:layout_marginTop="16dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

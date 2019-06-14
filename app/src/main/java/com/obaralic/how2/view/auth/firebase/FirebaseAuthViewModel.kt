@@ -17,26 +17,47 @@
 package com.obaralic.how2.view.auth.firebase
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.firebase.auth.FirebaseAuth
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.auth.FirebaseUser
-import com.obaralic.how2.util.livedata.FirebaseAuthLiveData
+import com.google.firebase.auth.GoogleAuthProvider
+import com.obaralic.how2.base.SessionManager
+import com.obaralic.how2.util.isEmailAddress
+import com.obaralic.how2.view.auth.FormResource
+import com.obaralic.how2.view.auth.AuthResource
 import timber.log.Timber
 import javax.inject.Inject
 
-class FirebaseAuthViewModel @Inject constructor(private val auth: FirebaseAuth) : ViewModel() {
+class FirebaseAuthViewModel @Inject constructor(private val session: SessionManager) : ViewModel() {
 
-    private val authUser: FirebaseAuthLiveData by lazy { FirebaseAuthLiveData(auth) }
+    private val authForm: MutableLiveData<FormResource> by lazy { MutableLiveData<FormResource>() }
 
-    fun observeAuthUser(): LiveData<FirebaseUser?> = authUser
+    fun observeFormState(): LiveData<FormResource> = authForm
 
-    fun authenticate(email: String, pass: String) {
-        Timber.d("Authenticate attempt")
-        auth.signInWithEmailAndPassword(email, pass)
+    fun observeAuthState(): LiveData<AuthResource<FirebaseUser?>> = session.getUser()
+
+    fun authenticate(data: Pair<String, String>) {
+        Timber.d("Authenticate user attempt")
+        authForm.value = FormResource.freeze()
+        session.authenticate(data.first, data.second)
     }
 
-    fun signup(email: String, pass: String) {
-        Timber.d("Signup attempt")
-        auth.createUserWithEmailAndPassword(email, pass)
+    fun create(data: Pair<String, String>) {
+        Timber.d("Create user attempt")
+        authForm.value = FormResource.freeze()
+        session.create(data.first, data.second)
     }
+
+    fun authenticate(account: GoogleSignInAccount) {
+        val credential = GoogleAuthProvider.getCredential(account.idToken, null)
+        session.authenticate(credential)
+    }
+
+    fun formDataChanged(data: Pair<String, String>) {
+        if (!data.first.isEmailAddress()) authForm.value = FormResource.invalidEmail("Email field is not valid")
+        else if (data.second.isEmpty()) authForm.value = FormResource.invalidPassword("Password field is not valid")
+        else authForm.value = FormResource.validForm()
+    }
+
 }

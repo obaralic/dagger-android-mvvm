@@ -44,8 +44,7 @@ internal class MainActivity : SessionAwareActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item!!.itemId) {
             R.id.logout_item -> {
-                session.logout()
-                fireAuth.signOut()
+                session.signOut()
                 return true
             }
             android.R.id.home -> {

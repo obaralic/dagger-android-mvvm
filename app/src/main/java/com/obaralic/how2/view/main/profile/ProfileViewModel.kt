@@ -34,8 +34,8 @@ package com.obaralic.how2.view.main.profile
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.auth.FirebaseUser
 import com.obaralic.how2.base.SessionManager
-import com.obaralic.how2.model.User
 import com.obaralic.how2.view.auth.AuthResource
 import timber.log.Timber
 import javax.inject.Inject
@@ -46,5 +46,5 @@ class ProfileViewModel @Inject constructor(private val session: SessionManager):
         Timber.d("Profile View Module is injected!")
     }
 
-    fun getAuthUser(): LiveData<AuthResource<out User>> = session.getAuthUser()
+    fun getFireAuth(): LiveData<AuthResource<FirebaseUser?>> = session.getUser()
 }

@@ -19,17 +19,29 @@ package com.obaralic.how2.util.livedata
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.obaralic.how2.view.auth.AuthResource
 import timber.log.Timber
 import javax.inject.Inject
 
 class FirebaseAuthLiveData @Inject constructor(private val auth: FirebaseAuth) :
-    MutableLiveData<FirebaseUser?>(),  FirebaseAuth.AuthStateListener {
+    MutableLiveData<AuthResource<FirebaseUser?>>(),  FirebaseAuth.AuthStateListener {
+
+    private var lastUid: String? = null
 
     override fun onAuthStateChanged(auth: FirebaseAuth) {
         val user = auth.currentUser
-        if (user != null) Timber.d("Firebase authenticated: ${user.email}")
-        else Timber.d("Firebase logout detected!")
-        value = auth.currentUser
+        if (lastUid != user?.uid) {
+            lastUid = user?.uid
+            value =
+                if (user != null) {
+                    Timber.d("Auth LD authenticated")
+                    AuthResource.authenticated(user)
+                }
+                else {
+                    Timber.d("Auth LD signOut")
+                    AuthResource.logout()
+                }
+        }
     }
 
     override fun onActive() {

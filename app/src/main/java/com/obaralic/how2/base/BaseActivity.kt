@@ -40,7 +40,7 @@ internal abstract class BaseActivity : DaggerAppCompatActivity() {
     @Synchronized
     protected fun addDisposable(disposable: Disposable?) = disposable?.let { disposables.add(it) }
 
-    private fun init() {
+    protected open fun init() {
         initViewModel().let { Timber.d("initViewModel") }
         initBinding().let { Timber.d("initBinding") }
         initLayout().let { Timber.d("initLayout") }
